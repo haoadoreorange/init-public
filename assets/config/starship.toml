@@ -1,0 +1,8 @@
+[character]
+success_symbol = "☀️ ☀️"
+[username]
+show_always = true
+format = "┐\\(シ\\)┌ in "
+[hostname]
+ssh_only = false
+format = "[$hostname]($style) at "

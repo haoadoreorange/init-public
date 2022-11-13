@@ -1,0 +1,13 @@
+archive/
+bin/*
+!bin/*.sh
+assets/dconf
+assets/deer.jpg
+assets/extensions-sync.json
+assets/flameshot.conf
+assets/sig.profile
+assets/config/ibus-bamboo/
+assets/ssh/
+assets/x2goclient/
+
+.sig

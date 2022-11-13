@@ -1,0 +1,127 @@
+set autoindent
+set background=light
+set backspace=indent,start,eol
+set clipboard^=unnamed,unnamedplus
+"set cursorcolumn
+set cursorline
+set display=lastline,uhex
+set encoding=utf8
+set foldenable
+set foldcolumn=4
+set foldlevelstart=99
+set foldmethod=syntax
+set ignorecase
+set incsearch
+set infercase
+set mouse=v
+set mouses=i-r:beam,s:updown,sd:udsizing,vs:leftright,vd:lrsizing,m:no,ml:up-arrow,v:rightup-arrow
+set nofsync
+set nomodeline
+set nocompatible
+set number
+set report=0
+set ruler
+set secure
+set shiftround
+set showcmd
+set smartcase
+set smartindent
+set smarttab
+set spelllang=en_US
+set swapsync=
+set tabpagemax=99
+set tabstop=4 shiftwidth=4 expandtab
+set vb
+set viminfo=
+set virtualedit=block
+set whichwrap+=<,>,[,],b,s,h,l
+set wildmenu
+set wildmode=list:longest,full
+
+autocmd BufWinEnter * if line2byte(line("$") + 1) > 1000000 | syntax clear | endif
+
+if &t_Co > 16
+    syntax on
+    set hlsearch
+    filetype plugin indent on
+
+    highlight Normal cterm=None ctermfg=248 ctermbg=232
+
+    highlight Visual cterm=None ctermbg=235
+    highlight Search ctermbg=88 ctermfg=246
+
+    highlight CursorLine cterm=Bold ctermbg=234 ctermfg=None
+    highlight CursorLineNr ctermfg=34
+    highlight LineNr cterm=Bold ctermfg=28 ctermbg=233
+
+    highlight Folded cterm=None ctermfg=243 ctermbg=232
+    highlight FoldColumn ctermfg=160 ctermbg=0
+
+    highlight Todo cterm=Bold ctermfg=Red ctermbg=None
+    highlight DiffAdd cterm=None ctermfg=Black ctermbg=Green
+    highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
+    highlight DiffChange cterm=None ctermfg=Black ctermbg=Yellow
+    highlight DiffText cterm=None ctermfg=Black ctermbg=Magenta
+
+    highlight Comment ctermfg=25
+    highlight Statement ctermfg=166
+    highlight Type ctermfg=34
+    highlight Constant ctermfg=160
+    highlight PreProc ctermfg=162
+    highlight Special ctermfg=214
+    highlight Identifier ctermfg=32
+    
+    highlight MatchParen ctermbg=237 ctermfg=63
+endif
+
+" cursor shape when in insert vs normal visual mode
+if has("autocmd")
+    au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
+    au InsertEnter,InsertChange *
+        \ if v:insertmode == 'i' |
+        \   silent execute '!echo -ne "\e[5 q"' | redraw! |
+        \ elseif v:insertmode == 'r' |
+        \   silent execute '!echo -ne "\e[3 q"' | redraw! |
+        \ endif
+    au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+endif
+
+" remove line number shortcut (easy to select copy w mouse)
+fun! ToggleCopyMode()
+    if !exists('b:copymode')
+        let b:copymode=1
+        set nonumber
+        set foldcolumn=0
+    else
+        unlet b:copymode
+        set number
+        set foldcolumn=4
+    endif
+    return ""
+endfun
+:nnoremap <F2> <Esc>:call ToggleCopyMode()<CR>
+
+:inoremap {<CR>  {<CR>}<Esc>O
+:nnoremap <C-s> :w<CR>
+:inoremap <C-s> <C-o>:w<CR>
+
+" ** also used for vim vscode keybindings - only read mapping when no colon **
+nnoremap <F3> :noh<CR> 
+nnoremap o o.<Esc>"_x
+nnoremap d "_d
+vnoremap d "_d
+noremap D "_D
+nnoremap xx dd
+vnoremap p "_c<C-r>+<Esc>
+nnoremap c "_c
+vnoremap c "_c
+noremap C "_C
+noremap s "_s
+noremap S "_S
+noremap j gj
+noremap k gk
+noremap J 3gj
+noremap K 3gk
+noremap H 17h
+noremap L 17l
+" *****************************

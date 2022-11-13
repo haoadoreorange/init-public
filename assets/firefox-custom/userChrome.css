@@ -1,0 +1,49 @@
+/* Hide horizontal tabs at the top of the window */
+#tabbrowser-tabs {
+    visibility: collapse !important;
+}
+
+/* FF89, hide bottom border tab bar */
+:root {
+    --tabs-border-color: transparent !important;
+}
+
+/* Move Minimize/Restore/Close window buttons to the right of Hamburger menu (after hiding horizontal tabs) */
+/* Adding empty space for buttons */
+/* #nav-bar {
+  margin-right: 140px;
+} */
+
+/* Move minimize/restore/close buttons to empty space */
+/* #TabsToolbar > .titlebar-buttonbox-container {
+  display: block;
+  position: absolute;
+  top: 17px;
+  right: 1px;
+} */
+
+/* 15px for dragging whole window by mouse*/
+/* #titlebar {
+  appearance: none !important;
+  height: 15px;
+} */
+
+/* Fix for main menu calling by Alt button */
+/* #titlebar > #toolbar-menubar {
+  margin-top: 10px;
+} */
+
+/* Hide the header at the top of the sidebar */
+#sidebar-header {
+    display: none;
+}
+
+/* Hide buttons on address bar */
+/* #star-button-box, #pageAction-urlbar-_testpilot-containers  {
+  display: none !important;
+} */
+
+/* Button color on attention */
+:root:-moz-lwtheme {
+    --lwt-toolbarbutton-icon-fill-attention: red;
+}

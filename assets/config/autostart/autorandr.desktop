@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=autorandr
+Exec=autorandr -c
+TryExec=autorandr
+Terminal=false
+X-GNOME-Autostart-Delay=3
