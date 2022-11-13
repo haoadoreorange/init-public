@@ -112,7 +112,7 @@ sudo systemctl enable --now autorandr.service
 
 ###################################
 echo_headline "CONFIG CRONIE"
-# TODO: move tab-session-manager & backup ssh keys to incrond
+# TODO: move tab-session-manager, backup ssh keys, dconf, hs_err to incrond
 {
     crontab -l 2>/dev/null || :
     cat <<'EOF'
@@ -122,6 +122,7 @@ echo_headline "CONFIG CRONIE"
 @daily ls -d -1 "$HOME/Downloads/tab-session-manager/Auto Save - Window closed"/* | head -n -9 | xargs -d '\n' rm -f --
 @daily ls -d -1 "$HOME/Downloads/tab-session-manager/Auto Save - Browser exited"/* | head -n -9 | xargs -d '\n' rm -f --
 @daily bash -c 'for file in "$HOME"/.ssh/*; do whole_name="$(basename "$file")"; filename="${whole_name\%.*}"; extension="${whole_name##*.}"; if [ "$filename" != "$extension" ] && [ "$extension" = "pub" ]; then cp "$HOME/.ssh/$filename" "$HOME/.$USER"/apps-encrypted-data/ssh/; fi; done'
+@daily dconf dump / > "$HOME"/dev-sync/init/assets/dconf
 @hourly mv "$HOME"/hs_err_pid* "$HOME"/.java/
 EOF
 } | crontab -
