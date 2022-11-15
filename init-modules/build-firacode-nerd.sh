@@ -25,10 +25,9 @@ else
 fi
 if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
     sudo docker run --rm -v "$PWD":/opt tonsky/firacode:latest ./script/build.sh -f "cv01,cv04,onum,ss04,ss03,cv15,cv30,ss08"
-    sudo docker run --rm -v "$PWD/distr/ttf/Fira Code":/in -v "$PWD"/distr/ttf-patched:/out nerdfonts/patcher -c || :
-    sudo docker run --rm -v "$PWD/distr/ttf/Fira Code":/in -v "$PWD"/distr/ttf-patched:/out nerdfonts/patcher -cs || :
-    sudo chown $(whoami):$(whoami) distr/ttf-patched/
-    mkdir NerdFonts
-    mv distr/ttf-patched/ NerdFonts/FiraCode
-    mv NerdFonts/ "$HOME"/dev-sync/
+    ttf_patched="distr/ttf-patched"
+    sudo docker run --rm -v "$PWD/distr/ttf/Fira Code":/in -v "$PWD/$ttf_patched":/out nerdfonts/patcher -c || :
+    sudo docker run --rm -v "$PWD/distr/ttf/Fira Code":/in -v "$PWD/$ttf_patched":/out nerdfonts/patcher -cs || :
+    sudo chown $(whoami):$(whoami) "$ttf_patched"/
+    rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$ttf_patched"/ "$HOME"/dev-sync/NerdFonts/FiraCode
 fi

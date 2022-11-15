@@ -107,7 +107,8 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
 
     ###################################
     headline="JUNO THEME"
-    juno_mirage="$HIDDEN_HOME"/Juno-mirage
+    dir_name="Juno-mirage"
+    juno_mirage="$HIDDEN_HOME/$dir_name"
     if [ -d "$juno_mirage" ]; then
         echo_headline "UPDATE $headline"
         cd "$juno_mirage"
@@ -118,13 +119,14 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
         git clone -b mirage https://github.com/EliverLara/Juno.git "$juno_mirage"
     fi
     if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
-        cp -dR "$juno_mirage" "$HOME"/.themes
+        rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$juno_mirage"/ "$HOME"/.themes/"$dir_name"
     fi
     msg=''
 
     ###################################
     # TODO: check if kora-green is included in repo https://github.com/bikass/kora/issues/107
     # headline="KORA ICONS"
+    # dir_name="kora-green"
     # kora="$HIDDEN_HOME"/kora
     # if [ -d "$kora" ]; then
     #     echo_headline "UPDATE $headline"
@@ -136,13 +138,14 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
     #     git clone https://github.com/bikass/kora.git "$kora"
     # fi
     # if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
-    #     cp -dR "$kora"/kora-green "$HOME"/.icons
+    #     rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$kora/$dir_name"/ "$HOME"/.icons/"$dir_name"
     #     gtk-update-icon-cache -f "$kora"/kora-green
     # fi
     # msg=''
 
     ###################################
     headline="NORDZY CURSORS"
+    dir_name="Nordzy-cursors-white"
     nordzy="$HIDDEN_HOME"/Nordzy-cursors
     if [ -d "$nordzy" ]; then
         echo_headline "UPDATE $headline"
@@ -154,7 +157,7 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
         git clone https://github.com/alvatip/Nordzy-cursors.git "$nordzy"
     fi
     if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
-        cp -dR "$nordzy"/Nordzy-cursors-white "$HOME"/.icons
+        rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$nordzy/$dir_name"/ "$HOME"/.icons/"$dir_name"
         gtk-update-icon-cache -f "$nordzy"/Nordzy-cursors-white
     fi
     msg=''
@@ -172,23 +175,22 @@ fi
 if [ "${FIRA_CODE-}" = "true" ]; then
     if type docker >/dev/null 2>&1; then
         bash "$INIT_MODULES"/build-firacode-nerd.sh
-        fira_built=true
+        fira_build=true
     else
         if type lxc >/dev/null 2>&1 && sudo lxc exec dev -- bash -c "type docker >/dev/null 2>&1" &&
             sudo lxc exec dev -- [ -d /home/ubuntu ]; then
             sudo lxc exec dev -- bash "${INIT_MODULES/$HOME/\/home\/ubuntu}"/build-firacode-nerd.sh
-            fira_built=true
+            fira_build=true
         else
             echo -e "${RED}ERROR: Cannot find docker, cannot build Fira Code Nerd${NC}"
         fi
     fi
-    if [ "${fira_built-}" = "true" ]; then
+    if [ "${fira_build-}" = "true" ]; then
         echo_headline "Build Fira Code Nerd successfully"
-        if [ -d "$HOME"/dev-sync/NerdFonts ]; then
-            local_font="$HOME"/.fonts
-            mkdir "$local_font"
-            rm -rf "$local_font"/NerdFonts
-            mv "$HOME"/dev-sync/NerdFonts "$local_font"/
+        dir_name="NerdFonts"
+        build_dir="$HOME"/dev-sync/"$dir_name"
+        if [ -d "$build_dir" ]; then
+            rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$build_dir"/ "$HOME"/.fonts/"$dir_name"
             fc-cache -f -v # Update font cache
         else
             echo -e "${RED}ERROR: Cannot find built fonts, cannot install Fira Code Nerd${NC}"
@@ -242,9 +244,7 @@ EOF
         git clone https://github.com/black7375/Firefox-UI-Fix.git "$fffix"
     fi
     if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
-        mkdir -p "$FIREFOX_PROFILE"/chrome
-        rm -rf "$FIREFOX_PROFILE"/chrome/*
-        cp -R "$fffix"/* "$FIREFOX_PROFILE"/chrome/
+        rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$fffix"/ "$FIREFOX_PROFILE"/chrome
         cp "$fffix"/user.js "$FIREFOX_PROFILE"/
 
         ###################################

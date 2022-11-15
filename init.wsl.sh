@@ -24,8 +24,7 @@ set -euo pipefail
 ###################################
 echo_headline "BOOTSTRAP INIT FOLDER"
 if [ ! -d "$INIT_DIR" ]; then
-    mkdir -p "$INIT_DIR"
-    cp -R "$(dirname "$(realpath "$BASH_SOURCE")")"/. "$INIT_DIR"/
+    rsync --mkpath -aPhhv "$(dirname "$(realpath "$BASH_SOURCE")")"/ "$INIT_DIR"
 fi
 
 ###################################
