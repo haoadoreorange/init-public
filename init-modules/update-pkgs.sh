@@ -169,25 +169,32 @@ fi
 ################################### <---------- END ----------> ##################################
 
 ###################################
-# if [ "${FIRA_CODE-}" = "true" ]; then
-#     headline="FIRA CODE"
-#     nerd_fonts="$HIDDEN_HOME"/nerd-fonts
-#     if [ -d "$nerd_fonts" ]; then
-#         echo_headline "UPDATE $headline"
-#         cd "$nerd_fonts"
-#         msg="$(git pull)"
-#         echo "$msg"
-#     else
-#         echo_headline "INSTALL $headline"
-#         git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts.git "$nerd_fonts"
-#         cd "$nerd_fonts"
-#         git sparse-checkout add patched-fonts/FiraCode
-#     fi
-#     if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
-#         bash "$nerd_fonts"/install.sh FiraCode
-#     fi
-#     msg=''
-# fi
+if [ "${FIRA_CODE-}" = "true" ]; then
+    if type docker >/dev/null 2>&1; then
+        bash "$INIT_MODULES"/build-firacode-nerd.sh
+        fira_built=true
+    else
+        if type lxc >/dev/null 2>&1 && sudo lxc exec dev -- bash -c "type docker >/dev/null 2>&1" &&
+            sudo lxc exec dev -- [ -d /home/ubuntu ]; then
+            sudo lxc exec dev -- bash "${INIT_MODULES/$HOME/\/home\/ubuntu}"/build-firacode-nerd.sh
+            fira_built=true
+        else
+            echo -e "${RED}ERROR: Cannot find docker, cannot build Fira Code Nerd${NC}"
+        fi
+    fi
+    if [ "${fira_built-}" = "true" ]; then
+        echo_headline "Build Fira Code Nerd successfully"
+        if [ -d "$HOME"/dev-sync/NerdFonts ]; then
+            local_font="$HOME"/.fonts
+            mkdir "$local_font"
+            rm -rf "$local_font"/NerdFonts
+            mv "$HOME"/dev-sync/NerdFonts "$local_font"/
+            fc-cache -f -v # Update font cache
+        else
+            echo -e "${RED}ERROR: Cannot find built fonts, cannot install Fira Code Nerd${NC}"
+        fi
+    fi
+fi
 
 ################################### <---------- BEGIN ----------> ##################################
 if [ "${FIREFOX_CUSTOM-}" = "true" ]; then
