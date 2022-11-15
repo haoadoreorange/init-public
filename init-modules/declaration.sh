@@ -181,9 +181,7 @@ git_config() {
         if type git-lfs >/dev/null 2>&1; then
             git lfs install # `git lfs install` is a configuration command, it should've been `git lfs initialize`
         fi
-        if [ -L "$INIT_MODULES"/git-sig.sh ]; then # wsl compatible, on windows the symlink might not work properly
-            echo -e "${RED}ERROR: git-sig.sh is not a symlink, cannot be run${NC}"
-            bash "$INIT_MODULES"/git-sig.sh "$@"
-        fi
+        ln -fs git-helpers/commands/git-sig.sh "$INIT_MODULES"/git-sig.sh # copy-to-windows compatible
+        bash "$INIT_MODULES"/git-sig.sh "$@"
     fi
 }
