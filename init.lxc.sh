@@ -4,6 +4,19 @@ echo "##############################"
 echo "##### init.lxc.sh script #####"
 echo "##############################"
 
+###################################
+if type sudo >/dev/null 2>&1; then
+    echo "<---------- DISABLE ROOT PASSWORD ---------->"
+    sudo passwd -l root
+    # sudo usermod --expiredate 1 root # sometimes Arch updates need root account
+    sudo sed -i '/#PermitRootLogin/a PermitRootLogin no' /etc/ssh/sshd_config &&
+        echo "Don't forget to restart SSH daemon"
+    sleep 10
+else
+    echo "ERROR: sudo not found on system"
+    exit 1
+fi
+
 set -euo pipefail
 . "$(dirname "$(realpath "$BASH_SOURCE")")"/init-modules/declaration.sh
 

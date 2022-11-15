@@ -9,8 +9,8 @@ if type sudo >/dev/null 2>&1; then
     echo "<---------- DISABLE ROOT PASSWORD ---------->"
     sudo passwd -l root
     # sudo usermod --expiredate 1 root # sometimes Arch updates need root account
-    sudo sed -i '/#PermitRootLogin/a PermitRootLogin no' /etc/ssh/sshd_config || :
-    echo "Don't forget to restart SSH daemon"
+    sudo sed -i '/#PermitRootLogin/a PermitRootLogin no' /etc/ssh/sshd_config &&
+        echo "Don't forget to restart SSH daemon"
     sleep 10
 else
     echo "ERROR: sudo not found on system"
