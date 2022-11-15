@@ -120,6 +120,11 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
     fi
     if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
         rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$juno_mirage"/ "$HOME"/.themes/"$dir_name"
+        thc="libadwaita-theme-changer"
+        git clone https://github.com/odziom91/libadwaita-theme-changer.git "$thc"
+        python "$thc"/libadwaita-tc.py --reset
+        python "$thc"/libadwaita-tc.py
+        rm -rf "$thc"
     fi
     msg=''
 
@@ -162,25 +167,18 @@ if [ "${XDG_SESSION_DESKTOP-}" = "gnome" ]; then
     fi
     msg=''
 
-    thc="libadwaita-theme-changer"
-    git clone https://github.com/odziom91/libadwaita-theme-changer.git "$thc"
-    python "$thc"/libadwaita-tc.py --reset
-    python "$thc"/libadwaita-tc.py
-    rm -rf "$thc"
-
 fi
 ################################### <---------- END ----------> ##################################
 
 ###################################
 if [ "${FIRA_CODE-}" = "true" ]; then
     if type docker >/dev/null 2>&1; then
-        bash "$INIT_MODULES"/build-firacode-nerd.sh
-        fira_build=true
+        bash "$INIT_MODULES"/build-firacode-nerd.sh || fira_build=true
     else
+        lxc_user="ubuntu"
         if type lxc >/dev/null 2>&1 && sudo lxc exec dev -- bash -c "type docker >/dev/null 2>&1" &&
-            sudo lxc exec dev -- [ -d /home/ubuntu ]; then
-            sudo lxc exec dev -- bash "${INIT_MODULES/$HOME/\/home\/ubuntu}"/build-firacode-nerd.sh
-            fira_build=true
+            sudo lxc exec dev -- [ -d /home/"$lxc_user" ]; then
+            sudo lxc exec dev -- sudo -i -u "$lxc_user" bash "${INIT_MODULES/$HOME/\/home\/$lxc_user}"/build-firacode-nerd.sh "${1-}" || fira_build=true
         else
             echo -e "${RED}ERROR: Cannot find docker, cannot build Fira Code Nerd${NC}"
         fi
@@ -191,6 +189,7 @@ if [ "${FIRA_CODE-}" = "true" ]; then
         build_dir="$HOME"/dev-sync/"$dir_name"
         if [ -d "$build_dir" ]; then
             rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$build_dir"/ "$HOME"/.fonts/"$dir_name"
+            rm -rf "$build_dir"
             fc-cache -f -v # Update font cache
         else
             echo -e "${RED}ERROR: Cannot find built fonts, cannot install Fira Code Nerd${NC}"

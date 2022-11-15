@@ -30,4 +30,6 @@ if [ "${1-}" = "-f" ] || [ "$msg" != "$ALREADY_UTD" ]; then
     sudo docker run --rm -v "$PWD/distr/ttf/Fira Code":/in -v "$PWD/$ttf_patched":/out nerdfonts/patcher -cs || :
     sudo chown $(whoami):$(whoami) "$ttf_patched"/
     rsync --mkpath -aPhhv --delete --exclude '*.git' --cvs-exclude "$ttf_patched"/ "$HOME"/dev-sync/NerdFonts/FiraCode
+    exit 1
 fi
+exit 0

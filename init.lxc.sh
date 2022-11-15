@@ -19,7 +19,7 @@ if type apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt upgrade -y
     sudo apt purge -y vim
-    sudo apt install -y curl wget fish git git-lfs build-essential fd-find bat fzf python3-pip vim-gtk
+    sudo apt install -y curl wget fish git git-lfs build-essential fd-find bat fzf python3-pip vim-gtk rsync
     sudo apt autoremove -y
     # sudo apt install -y texlive-latex-extra texlive-science texlive-lang-french texlive-extra-utils latexmk python3-pygments
     # sudo apt install -y default-jdk libswt-gtk-4-java # Required for java gui
