@@ -4,9 +4,9 @@ echo "##############################"
 echo "##### update-pkgs script #####"
 echo "##############################"
 
+. "$CUSTOM_BASHRC"
 set -euo pipefail
 . "$(dirname "$(realpath "$BASH_SOURCE")")"/declaration.sh
-. "$CUSTOM_BASHRC"
 
 ###################################
 echo_headline "INSTALL/UPDATE TRASH-CLI"
@@ -423,7 +423,9 @@ fi
 if [ "$(basename "${BASH_SOURCE[1]-}")" != "init.sh" ]; then
     if [ "${need_resourcing-}" = "true" ]; then
         cd "$HOME"
+        set +euo pipefail
         . "$CUSTOM_BASHRC"
+        set -euo pipefail
         if type fish >/dev/null 2>&1; then
             exec fish
         else
